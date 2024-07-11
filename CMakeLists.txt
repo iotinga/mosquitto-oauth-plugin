@@ -30,6 +30,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     SUFFIX ".so"  # Ensure the plugin has the .so extension
 )
 
+# Install the library
 install(TARGETS ${PROJECT_NAME} 
     LIBRARY DESTINATION lib
 )
