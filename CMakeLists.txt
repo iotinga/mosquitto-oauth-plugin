@@ -30,5 +30,9 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     SUFFIX ".so"  # Ensure the plugin has the .so extension
 )
 
+install(TARGETS ${PROJECT_NAME} 
+    LIBRARY DESTINATION lib
+)
+
 # Set CMake to use RPATH
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)

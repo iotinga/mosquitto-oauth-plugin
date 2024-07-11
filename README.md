@@ -52,19 +52,23 @@ There are two ways to connect to the broker:
 To compile the project first install the dependencies and then run the following commands:
 
 ```bash
-mkdir build
-cd build
+mkdir build && cd build
 cmake ..
 make
-make install
+```
+
+Then you can install the library in the `/usr/local/lib` path with the command:
+
+```bash
+sudo make install
 ```
 
 ### Build Dependencies
 
-- Eclipse Mosquitto v2.0.18 (https://github.com/eclipse/mosquitto)
-- Curl (https://github.com/curl/curl)
-- LibJWT (https://github.com/benmcollins/libjwt)
-- Jansson (https://github.com/akheron/jansson)
+- Eclipse Mosquitto v2.0.18 (<https://github.com/eclipse/mosquitto>)
+- Curl (<https://github.com/curl/curl>)
+- LibJWT (<https://github.com/benmcollins/libjwt>)
+- Jansson (<https://github.com/akheron/jansson>)
 
 **[Back to top](#table-of-contents)**
 
@@ -137,6 +141,6 @@ This project is licensed under the Apache License 2.0 - see [LICENSE](LICENSE) f
 
 ## Author
 
-- **[Cristiano Di Bari](https://github.com/cridiba)** [cristiano.dibari@iotinga.it](mailto:cristiano.dibari@iotinga.it)
+- **[Cristiano Di Bari](https://github.com/cridiba)** - [cristiano.dibari@iotinga.it](mailto:cristiano.dibari@iotinga.it)
 
 **[Back to top](#table-of-contents)**
