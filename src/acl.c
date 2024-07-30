@@ -13,8 +13,7 @@ int acl_check_subscribe(struct mosquitto_evt_acl_check *ed, const struct user_se
     for (size_t i = 0; i < user->subscribe_topics.size; i++)
     {
         char *sub_topic_str = user->subscribe_topics.data[i];
-        bool result = false;
-        mosquitto_topic_matches_sub(sub_topic_str, ed->topic, &result);
+        bool result = acl_sub_match(sub_topic_str, ed->topic);
         if (result)
         {
             mosquitto_log_printf(MOSQ_LOG_DEBUG, "User %s is allowed to SUBSCRIBE to topic %s.", mosquitto_client_username(ed->client), ed->topic);

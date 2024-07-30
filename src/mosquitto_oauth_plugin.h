@@ -55,6 +55,7 @@ int disconnect_callback(int event, void *event_data, void *userdata);
 int acl_check_callback(int event, void *event_data, void *userdata);
 int acl_check_publish(struct mosquitto_evt_acl_check *ed, const struct user_session *user);
 int acl_check_subscribe(struct mosquitto_evt_acl_check *ed, const struct user_session *user);
+bool acl_sub_match(const char *acl, const char *sub);
 
 /* Session */
 int user_session_from_jwt(const char *client_id, char *token, jwt_t *jwt, struct plugin_state *state);
