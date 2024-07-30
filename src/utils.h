@@ -11,7 +11,6 @@
 
 #include <stddef.h>
 
-#include "hashmap.h"
 #include "jansson.h"
 
 #define UNUSED(A) (void)(A)
@@ -33,19 +32,5 @@ typedef struct
 void parse_json_string_array(json_t *array_json, string_array *string_array);
 
 void string_array_free(string_array *string_array);
-
-typedef struct
-{
-    const char *client_id;
-    bool superuser;
-    string_array publish_topics;
-    string_array subscribe_topics;
-} user_session;
-
-int user_session_compare(const void *a, const void *b, void *udata);
-
-uint64_t user_session_hash(const void *item, uint64_t seed0, uint64_t seed1);
-
-void user_session_free(void *item);
 
 #endif // UTILS_H

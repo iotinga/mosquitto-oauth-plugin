@@ -45,3 +45,9 @@
 
 # Build dir
 build*/
+
+# VSCode dir
+.vscode/
+
+# Test configuration
+mosquitto.conf

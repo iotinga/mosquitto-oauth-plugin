@@ -9,6 +9,7 @@
 #include <string.h>
 
 #include "utils.h"
+
 #include "jansson.h"
 #include "mosquitto_broker.h"
 
@@ -34,24 +35,4 @@ void string_array_free(string_array *string_array)
         mosquitto_free(string_array->data[i]);
     }
     mosquitto_free(string_array->data);
-}
-
-int user_session_compare(const void *a, const void *b, void *udata)
-{
-    const user_session *ua = a;
-    const user_session *ub = b;
-    return strcmp(ua->client_id, ub->client_id);
-}
-
-uint64_t user_session_hash(const void *item, uint64_t seed0, uint64_t seed1)
-{
-    const user_session *user = item;
-    return hashmap_sip(user->client_id, strlen(user->client_id), seed0, seed1);
-}
-
-void user_session_free(void *item)
-{
-    const user_session *user = item;
-    string_array_free((void *)&user->publish_topics);
-    string_array_free((void *)&user->subscribe_topics);
 }
