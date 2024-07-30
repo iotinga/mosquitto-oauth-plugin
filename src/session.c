@@ -8,6 +8,10 @@
 
 #include "mosquitto_oauth_plugin.h"
 
+#include <time.h>
+
+#define EXP_GRANT "exp"
+
 #define MQTT_ACL_GRANT "mqtt_acl"
 #define MQTT_ACL_PUBLISH_KEY "publish"
 #define MQTT_ACL_SUBSCRIBE_KEY "subscribe"
@@ -53,6 +57,19 @@ int user_session_from_jwt(const char *client_id, char *token, jwt_t *jwt, struct
         mosquitto_log_printf(MOSQ_LOG_ERR, "Error parsing JWT payload: %s", json_error.text);
         free(jwt_payload);
         return MOSQ_ERR_AUTH;
+    }
+
+    if (state->jwt_validate_exp)
+    {
+        time_t now = time(NULL);
+        json_t *jwt_exp = json_object_get(jwt_payload_json, EXP_GRANT);
+        time_t exp = json_integer_value(jwt_exp);
+        if (now > exp)
+        {
+            mosquitto_log_printf(MOSQ_LOG_ERR, "JWT is expired.");
+            free(jwt_payload);
+            return MOSQ_ERR_AUTH;
+        }
     }
 
     json_t *mqtt_acl_json = json_object_get(jwt_payload_json, MQTT_ACL_GRANT);
