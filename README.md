@@ -1,3 +1,8 @@
+![Finanziato dall'Unione europea | Ministero dell'Università e della Ricerca | Italia domani PNRR | iNEST ](assets/HEADER_INEST.png)
+
+>Programma iNEST Codice ECS00000043 finanziato sui fondi PNRR MUR – M4C2” – Investimento 1.5. Avviso “Ecosistemi dell’Innovazione” 
+>CUP progetto B33D24000100004
+
 # Mosquitto OAuth Plugin
 
 Custom plugin for Mosquitto that enables authentication and authorization using OAuth2 JWT tokens.
