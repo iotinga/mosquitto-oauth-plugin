@@ -1,0 +1,68 @@
+# .github/workflows/ci.yml
+name: Build Mosquitto Plugin
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        linkage: [Shared, Static]
+        build-type: [Release]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      #— Linux: install all dev packages (both static .a and shared .so are in -dev)
+      - name: Install Linux deps
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            cmake build-essential pkg-config \
+            libmosquitto-dev \
+            libcurl4-openssl-dev \
+            libjwt-dev \
+            libjansson-dev
+
+      #— Windows: bootstrap vcpkg and install both dynamic & static libraries
+      - name: Bootstrap vcpkg & install deps
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          git clone https://github.com/microsoft/vcpkg.git $Env:GITHUB_WORKSPACE\vcpkg
+          & .\vcpkg\bootstrap-vcpkg.bat -disableMetrics
+          # dynamic triplet (x64-windows) and static triplet (x64-windows-static)
+          .\vcpkg\vcpkg install curl libjwt jansson
+          .\vcpkg\vcpkg install curl:x64-windows-static libjwt:x64-windows-static jansson:x64-windows-static
+          echo "VCPKG_TOOLCHAIN_FILE=$Env:GITHUB_WORKSPACE\vcpkg\scripts\buildsystems\vcpkg.cmake" >> $Env:GITHUB_ENV
+
+      #— Configure CMake
+      - name: Configure
+        run: |
+          cmake -S . -B build \
+            -DBUILD_SHARED_LIBS=$([[ "${{ matrix.linkage }}" == "Shared" ]] && echo ON || echo OFF) \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} \
+            ${{ runner.os == 'Windows' && '-DCMAKE_TOOLCHAIN_FILE=' + env.VCPKG_TOOLCHAIN_FILE + ( matrix.linkage == 'Static' ? ' -DVCPKG_TARGET_TRIPLET=x64-windows-static' : '' ) || '' }}
+
+      #— Build
+      - name: Build
+        run: cmake --build build --config ${{ matrix.build-type }}
+
+      #— Upload
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: mosquitto-plugin-${{ matrix.os }}-${{ matrix.linkage }}
+          path: |
+            build/*.so       # Linux shared
+            build/*.a        # Linux static (if .a is produced)
+            build/*.dll      # Windows shared/static
+            build/${{ matrix.build-type }}/*.dll
