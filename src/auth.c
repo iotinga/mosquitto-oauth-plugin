@@ -41,7 +41,6 @@ int basic_auth_callback(int event, void *event_data, void *userdata)
     struct mosquitto_evt_basic_auth *ed = event_data;
 
     int err = MOSQ_ERR_AUTH;
-    jwt_t *jwt = NULL;
     char *admin_token = NULL;
     char *token = NULL;
     bool is_token_dynamic = false;
@@ -110,17 +109,12 @@ int basic_auth_callback(int event, void *event_data, void *userdata)
 
     if (token != NULL)
     {
-        err = user_session_from_jwt(client_id, token, jwt, state);
+        err = user_session_from_jwt(client_id, token, state);
     }
 
     if (is_token_dynamic && token != NULL)
     {
         mosquitto_free(token);
-    }
-
-    if (jwt != NULL)
-    {
-        jwt_free(jwt);
     }
 
     return err;

@@ -22,7 +22,6 @@
 #include "curl/curl.h"
 #include "hashmap.h"
 #include "jansson.h"
-#include "jwt.h"
 #include "oauth.h"
 #include "openssl/x509.h"
 #include "utils.h"
@@ -58,7 +57,7 @@ int acl_check_subscribe(struct mosquitto_evt_acl_check *ed, const struct user_se
 bool acl_sub_match(const char *acl, const char *sub);
 
 /* Session */
-int user_session_from_jwt(const char *client_id, char *token, jwt_t *jwt, struct plugin_state *state);
+int user_session_from_jwt(const char *client_id, char *token, struct plugin_state *state);
 int user_session_compare(const void *a, const void *b, void *udata);
 uint64_t user_session_hash(const void *item, uint64_t seed0, uint64_t seed1);
 void user_session_free(void *item);
